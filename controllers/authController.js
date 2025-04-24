@@ -27,7 +27,7 @@ export const loginUser = async (req, res) => {
 
     const user = await User.findOne({email});
     if(!user){
-        res.status(404).json({message : "User not found"});
+        res.status(401).json({message : "User not found"});
         return 
     }
     
@@ -41,7 +41,7 @@ export const loginUser = async (req, res) => {
 
     const token = jwt.sign({userId: user._id},process.env.JWT_SECRET,{expiresIn: '1h'})
 
-    res.json({token})
+    res.status(200).json({token})
 }
 catch(error){
     console.log("Error in login with error",error.message)
