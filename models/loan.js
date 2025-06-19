@@ -28,6 +28,10 @@ const LoanSchema = new mongoose.Schema({
         type : Date,
         default : Date.now()
     },
+    loanName : {
+        type : String,
+        default : ""
+    },
     payments: [{
         type : mongoose.Schema.Types.ObjectId,
         ref : 'Payment',

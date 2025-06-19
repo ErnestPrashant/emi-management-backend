@@ -3,8 +3,9 @@ import Loan from "../models/loan.js";
 
 export const applyLoan = async (req, res) => {
   try {
-    const { userId, principal, annualInterestRate, tenure } = req.body;
-    let rate = annualInterestRate / (12 * 100); //monthly rate
+    let { principal, rate, tenure, loanName } = req.body;
+    let userId = req.userId
+    rate = rate / (12 * 100); //monthly rate
     const emi =
       (principal * rate * Math.pow(1 + rate, tenure)) /
       (Math.pow(1 + rate, tenure) - 1);
@@ -12,11 +13,12 @@ export const applyLoan = async (req, res) => {
     const loan = new Loan({
       userId,
       principal,
-      annualInterestRate,
+      annualInterestRate:rate,
       tenure,
       monthlyEMI: emi.toFixed(2),
       remainingBalance: principal,
       startDate,
+      loanName
     });
     await loan.save();
     res.status(201).json({
@@ -31,7 +33,7 @@ export const applyLoan = async (req, res) => {
 
 export const getLoans = async (req, res) => {
   try {
-    const { userId } = req.params;
+    const userId  = req.userId;
     let query = {};
     let data;
     if (userId == "all") {
